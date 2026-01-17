@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auplodes | Secure Cloud</title>
+    <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; text-align: center; overflow-x: hidden; }
+        
+        /* Rainbow Glow Box */
+        .tg-box { margin: 20px auto; width: 90%; max-width: 400px; padding: 12px; background: #000; border-radius: 10px; border: 2px solid; animation: rgb 3s infinite; }
+        @keyframes rgb { 0% { border-color: red; box-shadow: 0 0 10px red; } 33% { border-color: lime; box-shadow: 0 0 10px lime; } 66% { border-color: blue; box-shadow: 0 0 10px blue; } 100% { border-color: red; box-shadow: 0 0 10px red; } }
+        
+        .main { max-width: 500px; margin: 40px auto; background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #334155; }
+        h1 { color: var(--accent); font-size: 2.5rem; margin-bottom: 5px; }
+        .owner { color: #94a3b8; font-size: 0.9rem; margin-bottom: 25px; font-weight: bold; }
+
+        /* Loading Bar CSS */
+        #loader-container { display: none; margin: 25px 0; }
+        .progress-bg { background: #334155; border-radius: 20px; height: 18px; width: 100%; position: relative; overflow: hidden; border: 1px solid #475569; }
+        .progress-fill { background: linear-gradient(90deg, #38bdf8, #818cf8); height: 100%; width: 0%; transition: 0.4s; box-shadow: 0 0 15px var(--accent); }
+        #percentText { font-weight: bold; color: var(--accent); margin-bottom: 10px; font-size: 1.1rem; }
+        
+        /* Button & Inputs */
+        .btn { background: var(--accent); color: #000; border: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s; width: 100%; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        input[type="text"] { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; color: #38bdf8; border-radius: 8px; margin-top: 15px; text-align: center; box-sizing: border-box; }
+        
+        /* Stats Footer */
+        footer { margin-top: 50px; padding: 40px 20px; background: #020617; }
+        .stat { font-size: 1.5rem; font-weight: 800; color: var(--accent); margin: 10px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="tg-box"><a href="https://t.me/+PvAMD5GrdcBkNDE1" target="_blank" style="color:white; text-decoration:none; font-weight:bold;">JOIN TELEGRAM</a></div>
+
+    <div class="main">
+        <h1>Auplodes</h1>
+        <div class="owner">ANKIT X MODZ PROPERTY</div>
+
+        <div id="login-view">
+            <input type="text" id="uname" placeholder="Enter Username" style="margin-bottom:10px;">
+            <input type="password" id="upass" placeholder="Password (Min 8 Letters)" style="width:100%; padding:12px; background:#0f172a; border:1px solid #334155; color:white; border-radius:8px; box-sizing:border-box;">
+            <button class="btn" onclick="checkAuth()">Access Dashboard</button>
+        </div>
+
+        <div id="upload-view" style="display:none;">
+            <p>Welcome, <span id="user-show" style="color:var(--accent)"></span></p>
+            <input type="hidden" role="uploadcare-uploader" data-public-key="d2dac43b0699b5b058d8" id="uploader" />
+            
+            <div id="loader-container">
+                <p id="percentText">Ready to process...</p>
+                <div class="progress-bg"><div class="progress-fill" id="fill"></div></div>
+            </div>
+
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="stat">9,865+ FILES UPLOADED</div>
+        <div class="stat">7.5TB+ STORAGE USED</div>
+        <p style="color:#64748b; margin-top:20px;">© 2026 AUPLODES | MADE BY ANKIT</p>
+    </footer>
+
+    <script>
+        function checkAuth() {
+            const u = document.getElementById('uname').value;
+            const p = document.getElementById('upass').value;
+            if(p.length < 8) return alert("Password 8 letters ka rakho!");
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('upload-view').style.display = 'block';
+            document.getElementById('user-show').innerText = u;
+        }
+
+        const widget = uploadcare.Widget('#uploader');
+        const loader = document.getElementById('loader-container');
+        const fill = document.getElementById('fill');
+        const pText = document.getElementById('percentText');
+
+        widget.onUploadStart((file) => {
+            loader.style.display = 'block';
+            file.progress((info) => {
+                let p = Math.round(info.progress * 100);
+                fill.style.width = p + '%';
+                pText.innerText = "Uploading: " + p + "%";
+            });
+        });
+
+        widget.onUploadComplete((info) => {
+            loader.style.display = 'none';
+            // Automatic Download Link Generation
+            const baseUrl = window.location.href.split('index.html')[0].split('?')[0];
+            const shareLink = `${baseUrl}download.html?id=${info.uuid}&n=${encodeURIComponent(info.name)}`;
+
+            document.getElementById('result').innerHTML = `
+                <p style="color:#22c55e; margin-top:20px;">✅ Upload Complete!</p>
+                <input type="text" value="${shareLink}" id="finalLink" readonly>
+                <button class="btn" onclick="copy()">Copy Share Link</button>
+            `;
+        });
+
+        function copy() {
+            const copyText = document.getElementById("finalLink");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Link copied! Share it with your friends.");
+        }
+    </script>
+</body>
+              </html>
+              
