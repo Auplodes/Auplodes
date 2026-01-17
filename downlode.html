@@ -3,38 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download File | Auplodes</title>
+    <title>Secure Download | Auplodes</title>
     <style>
-        body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; margin: 0; }
-        .container { max-width: 500px; margin: 100px auto; background: #1e293b; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); border: 1px solid #334155; }
-        .file-name { color: #38bdf8; font-size: 1.5rem; margin: 20px 0; word-break: break-all; }
-        .dl-btn { background: #22c55e; color: white; padding: 18px 50px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 1.3rem; display: inline-block; transition: 0.3s; box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4); }
-        .dl-btn:hover { transform: scale(1.05); background: #16a34a; }
-        .info { color: #94a3b8; font-size: 0.8rem; margin-top: 30px; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;800&display=swap');
+        body { background: #030712; color: white; font-family: 'Plus Jakarta Sans', sans-serif; text-align: center; }
+        .container { max-width: 500px; margin: 100px auto; background: #111827; padding: 50px; border-radius: 40px; border: 1px solid #1f2937; }
+        .icon { font-size: 80px; margin-bottom: 20px; }
+        h2 { font-weight: 800; color: #38bdf8; }
+        .dl-btn { background: #22c55e; color: white; padding: 20px 60px; border-radius: 15px; text-decoration: none; font-weight: 800; display: inline-block; margin-top: 30px; box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3); }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <div style="font-size: 60px;">📦</div>
-        <div class="file-name" id="fname">Searching file...</div>
-        <p>Your file is ready to download securely.</p>
-        <a href="#" id="dl-link" class="dl-btn">DOWNLOAD NOW</a>
-        <div class="info">Secured by ANKIT X MODZ | Auplodes Cloud</div>
+        <div class="icon">💎</div>
+        <h2 id="fname">File Found</h2>
+        <p>This file is shared via Auplodes.in Premium Cloud.</p>
+        <a href="#" id="link" class="dl-btn">DOWNLOAD NOW</a>
     </div>
-
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const fileId = params.get('id');
-        const name = params.get('n');
-
-        if(fileId) {
-            document.getElementById('fname').innerText = name || "Untitled File";
-            const finalUrl = `https://ucarecdn.com/${fileId}/-/inline/no/${name}`;
-            document.getElementById('dl-link').href = finalUrl;
-            document.getElementById('dl-link').setAttribute('download', name);
-        } else {
-            document.body.innerHTML = "<h1>Error: Invalid Link!</h1>";
+        const p = new URLSearchParams(window.location.search);
+        const id = p.get('file');
+        const name = p.get('name');
+        if(id) {
+            document.getElementById('fname').innerText = name;
+            document.getElementById('link').href = `https://ucarecdn.com/${id}/-/inline/no/${name}`;
         }
     </script>
 </body>
