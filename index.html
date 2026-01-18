@@ -21,13 +21,13 @@
         #upload-status-box { display: none; background: #121416; padding: 20px; border-radius: 8px; margin-top: 15px; text-align: left; }
         .pg-container { width: 100%; background: #333; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
         .pg-bar { width: 0%; height: 100%; background: var(--mf-blue); transition: width 0.3s; }
-        .search-box { width: 100%; padding: 10px; background: #121416; border: 1px solid var(--mf-border); border-radius: 6px; color: white; margin-bottom: 15px; }
+        .search-box { width: 100%; padding: 12px; background: #121416; border: 1px solid var(--mf-border); border-radius: 6px; color: white; margin-bottom: 15px; box-sizing: border-box; }
         .file-list { background: var(--mf-card); border-radius: 10px; border: 1px solid var(--mf-border); overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
         th { background: #2a2e33; padding: 12px; text-align: left; color: #888; font-size: 12px; }
         td { padding: 12px; border-bottom: 1px solid var(--mf-border); font-size: 14px; }
-        .copy-btn { background: var(--mf-blue); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-right: 5px; }
-        .del-btn { background: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+        .copy-btn { background: var(--mf-blue); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-right: 5px; font-weight: bold;}
+        .del-btn { background: #ff4d4d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;}
         .auth-card { background: var(--mf-card); padding: 30px; border-radius: 12px; max-width: 350px; margin: 50px auto; }
         input { width: 100%; padding: 12px; margin-bottom: 15px; background: #0d0e10; border: 1px solid var(--mf-border); color: white; border-radius: 6px; box-sizing: border-box; }
         .btn-main { width: 100%; padding: 12px; background: var(--mf-blue); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
@@ -56,7 +56,7 @@
                     <div class="pg-container"><div class="pg-bar" id="pg-bar-fill"></div></div>
                 </div>
             </div>
-            <h3>📁 My Files</h3>
+            <h3 style="margin: 15px 0 10px 0;">📁 My Files</h3>
             <input type="text" class="search-box" id="fileSearch" placeholder="Search your files..." onkeyup="filterFiles()">
             <div class="file-list">
                 <table>
@@ -94,16 +94,37 @@
             const loc = window.location.href;
             const directory = loc.substring(0, loc.lastIndexOf('/'));
             const downloadUrl = `${directory}/download.html?fileId=${uuid}&name=${encodeURIComponent(name)}`;
-            list.unshift({ name, url: downloadUrl, id: Date.now() });
+            
+            // Fixed: Unique ID with Timestamp
+            list.unshift({ name: name, url: downloadUrl, id: Date.now().toString() });
             localStorage.setItem('user_files', JSON.stringify(list));
             loadFiles();
+            alert("File Uploaded Successfully!");
         }
 
         function loadFiles() {
             const list = JSON.parse(localStorage.getItem('user_files') || '[]');
             const tbody = document.getElementById('file-table-body');
             document.getElementById('file-count').innerText = list.length;
-            tbody.innerHTML = list.map(f => `<tr><td><div style="width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 ${f.name}</div></td><td><button class="copy-btn" onclick="copyLink('${f.url}')">Copy</button><button class="del-btn" onclick="deleteFile(${f.id})">Delete</button></td></tr>`).join('');
+            
+            tbody.innerHTML = list.map(f => `
+                <tr id="row-${f.id}">
+                    <td><div style="width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 ${f.name}</div></td>
+                    <td>
+                        <button class="copy-btn" onclick="copyLink('${f.url}')">Copy</button>
+                        <button class="del-btn" onclick="deleteFile('${f.id}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteFile(targetId) {
+            if(!confirm("Kya aap ise delete karna chahte hain?")) return;
+            let list = JSON.parse(localStorage.getItem('user_files') || '[]');
+            // Fixed: Strict comparison for specific file deletion
+            list = list.filter(f => f.id !== targetId);
+            localStorage.setItem('user_files', JSON.stringify(list));
+            loadFiles();
         }
 
         function filterFiles() {
@@ -112,18 +133,10 @@
             rows.forEach(row => { row.style.display = row.innerText.toLowerCase().includes(val) ? '' : 'none'; });
         }
 
-        function deleteFile(id) {
-            let list = JSON.parse(localStorage.getItem('user_files') || '[]');
-            list = list.filter(f => f.id !== id);
-            localStorage.setItem('user_files', JSON.stringify(list));
-            loadFiles();
-        }
-
         function copyLink(url) {
             const el = document.createElement('textarea'); el.value = url; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
             alert("Link Copied!");
         }
     </script>
 </body>
-    </html>
-                                           
+</html>
