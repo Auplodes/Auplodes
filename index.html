@@ -48,7 +48,6 @@
             border: 2px dashed var(--mf-border); text-align: center; margin-bottom: 25px;
         }
 
-        /* Progress Bar Styling */
         #upload-status-box { 
             display: none; background: #121416; padding: 20px; 
             border-radius: 8px; margin-top: 15px; text-align: left;
@@ -56,7 +55,6 @@
         .pg-container { width: 100%; background: #333; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
         .pg-bar { width: 0%; height: 100%; background: var(--mf-blue); transition: width 0.3s; }
 
-        /* Table Styling */
         .file-list { background: var(--mf-card); border-radius: 10px; border: 1px solid var(--mf-border); overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; }
         th { background: #2a2e33; padding: 12px; text-align: left; color: #888; font-size: 12px; }
@@ -131,15 +129,13 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="file-table-body">
-                        </tbody>
+                    <tbody id="file-table-body"></tbody>
                 </table>
             </div>
         </div>
     </div>
 
     <script>
-        // Session Management
         window.onload = () => {
             const user = localStorage.getItem('logged_user');
             if(user) { showDash(user); loadFiles(); }
@@ -167,19 +163,15 @@
             location.reload();
         }
 
-        // --- FIXED UPLOAD LOGIC ---
         const widget = uploadcare.Widget('#uploader-input');
         const statusBox = document.getElementById('upload-status-box');
         const progressBar = document.getElementById('pg-bar-fill');
         const progressText = document.getElementById('p-text');
         const nameDisplay = document.getElementById('fname-display');
 
-        // onChange trigger hota hai jaise hi file select hoti hai
         widget.onChange(function(file) {
             if (file) {
                 statusBox.style.display = 'block';
-                
-                // Track Progress
                 file.progress(function(info) {
                     const percent = Math.round(info.progress * 100);
                     progressBar.style.width = percent + '%';
@@ -187,7 +179,6 @@
                     if(info.name) nameDisplay.innerText = info.name;
                 });
 
-                // When Done
                 file.done(function(info) {
                     statusBox.style.display = 'none';
                     saveFile(info.name, info.uuid);
@@ -198,9 +189,11 @@
         function saveFile(name, uuid) {
             let list = JSON.parse(localStorage.getItem('user_files') || '[]');
             
-            // Premium Link Generation
-            const baseUrl = window.location.href.split('index.html')[0];
-            const downloadUrl = baseUrl + "download.html?fileId=" + uuid + "&name=" + encodeURIComponent(name);
+            // --- GITHUB PAGES LINK FIX ---
+            // Hum current URL se index.html ko remove karke download.html jodenge
+            const loc = window.location.href;
+            const directory = loc.substring(0, loc.lastIndexOf('/'));
+            const downloadUrl = `${directory}/download.html?fileId=${uuid}&name=${encodeURIComponent(name)}`;
 
             const newFile = {
                 name: name,
@@ -208,10 +201,10 @@
                 date: new Date().toLocaleDateString()
             };
 
-            list.unshift(newFile); // Nayi file sabse upar dikhegi
+            list.unshift(newFile);
             localStorage.setItem('user_files', JSON.stringify(list));
             loadFiles();
-            alert("Success! Link Generated in My Files.");
+            alert("Success! Check My Files.");
         }
 
         function loadFiles() {
@@ -243,5 +236,4 @@
         }
     </script>
 </body>
-    </html>
-                            
+</html>
