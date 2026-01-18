@@ -6,87 +6,58 @@
     <title>Download | Auplodes</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-        
-        body {
-            background-color: #0d0e10;
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .dl-card {
-            background: #1a1c1e;
-            width: 90%;
-            max-width: 450px;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            border: 1px solid #333;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-        }
-
-        .icon { font-size: 60px; margin-bottom: 20px; }
-
-        .file-name {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #fff;
-            word-wrap: break-word;
-        }
-
-        .file-meta { color: #888; font-size: 14px; margin-bottom: 30px; }
-
-        .dl-btn {
-            display: block;
-            background: #007bff;
-            color: white;
-            text-decoration: none;
-            padding: 20px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 18px;
-            transition: 0.3s;
-        }
-
-        .dl-btn:hover { background: #0056b3; transform: scale(1.03); }
-
-        .footer { margin-top: 30px; font-size: 10px; color: #444; text-transform: uppercase; }
+        body { background-color: #0d0e10; color: #fff; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .dl-card { background: #1a1c1e; width: 90%; max-width: 400px; padding: 40px; border-radius: 20px; text-align: center; border: 1px solid #333; box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
+        .icon { font-size: 50px; margin-bottom: 20px; }
+        .file-name { font-size: 18px; font-weight: 700; margin-bottom: 30px; word-wrap: break-word; }
+        .dl-btn { display: block; background: #007bff; color: white; text-decoration: none; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; border: none; width: 100%; }
+        .dl-btn:disabled { background: #444; cursor: not-allowed; }
+        .footer { margin-top: 25px; font-size: 10px; color: #555; letter-spacing: 1px; }
     </style>
 </head>
 <body>
-
     <div class="dl-card" id="content">
         <div class="icon">📁</div>
-        <div class="file-name" id="fname">Loading...</div>
-        <div class="file-meta">Fast Download • Verified by Ankit X Modz</div>
-        
-        <a href="#" id="dl-trigger" class="dl-btn">DOWNLOAD NOW</a>
-        
-        <div class="footer">Powered by Auplodes.in</div>
+        <div class="file-name" id="fname">Preparing File...</div>
+        <button id="dl-btn" class="dl-btn" onclick="startDownload()">DOWNLOAD NOW</button>
+        <div class="footer">POWERED BY AUPLODES.IN</div>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
         const fid = params.get('fileId');
-        const fname = params.get('name');
+        const fname = decodeURIComponent(params.get('name') || 'file');
 
-        if(fid && fname) {
-            document.getElementById('fname').innerText = decodeURIComponent(fname);
-            
-            // --- FIXED CDN LINK FORMAT ---
-            // Naya link format jo Uploadcare strictly follow karta hai
-            const directLink = `https://ucarecdn.com/${fid}/-/inline/no/${encodeURIComponent(fname)}`;
-            
-            const btn = document.getElementById('dl-trigger');
-            btn.href = directLink;
-            btn.setAttribute('download', decodeURIComponent(fname));
+        if(fid) {
+            document.getElementById('fname').innerText = fname;
         } else {
-            document.getElementById('content').innerHTML = "<h3>Error: Invalid Link</h3><p>Please try uploading the file again.</p>";
+            document.getElementById('content').innerHTML = "Invalid Link";
+        }
+
+        async function startDownload() {
+            const btn = document.getElementById('dl-btn');
+            btn.disabled = true;
+            btn.innerText = "Downloading...";
+
+            // Direct Uploadcare File Link
+            const fileUrl = `https://ucarecdn.com/${fid}/-/inline/no/`;
+
+            try {
+                const response = await fetch(fileUrl);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = fname; // Forced filename
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                btn.innerText = "Downloaded!";
+            } catch (err) {
+                // Fallback if fetch fails
+                window.location.href = fileUrl;
+            }
         }
     </script>
 </body>
