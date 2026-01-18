@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auplodes | MediaFire Edition</title>
+    <title>Auplodes | Secure Media Storage</title>
     <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         
         :root {
             --mf-blue: #007bff;
@@ -37,43 +37,41 @@
         .logo { font-size: 22px; font-weight: 700; color: var(--mf-blue); }
         .logo span { color: white; }
 
-        .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
 
-        /* Dashboard Items */
         #dashboard { display: none; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-card { background: var(--mf-card); padding: 15px; border-radius: 10px; border: 1px solid var(--mf-border); }
 
         .upload-section {
-            background: var(--mf-card); padding: 30px; border-radius: 12px;
-            border: 2px dashed var(--mf-border); text-align: center; margin-bottom: 30px;
+            background: var(--mf-card); padding: 25px; border-radius: 12px;
+            border: 2px dashed var(--mf-border); text-align: center; margin-bottom: 25px;
         }
 
-        /* Fixed Progress Bar UI */
+        /* Progress Bar Styling */
         #upload-status-box { 
             display: none; background: #121416; padding: 20px; 
-            border-radius: 8px; margin-top: 20px; text-align: left;
+            border-radius: 8px; margin-top: 15px; text-align: left;
         }
-        .pg-container { width: 100%; background: #333; height: 12px; border-radius: 6px; margin: 10px 0; overflow: hidden; }
-        .pg-bar { width: 0%; height: 100%; background: var(--mf-blue); transition: width 0.2s ease; box-shadow: 0 0 10px var(--mf-blue); }
+        .pg-container { width: 100%; background: #333; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
+        .pg-bar { width: 0%; height: 100%; background: var(--mf-blue); transition: width 0.3s; }
 
-        /* File Table */
+        /* Table Styling */
         .file-list { background: var(--mf-card); border-radius: 10px; border: 1px solid var(--mf-border); overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 500px; }
-        th { background: #2a2e33; padding: 12px; text-align: left; color: #888; font-size: 13px; }
-        td { padding: 15px; border-bottom: 1px solid var(--mf-border); font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #2a2e33; padding: 12px; text-align: left; color: #888; font-size: 12px; }
+        td { padding: 12px; border-bottom: 1px solid var(--mf-border); font-size: 14px; }
         
         .copy-btn {
-            background: var(--mf-blue); color: white; border: none; padding: 6px 12px;
-            border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;
+            background: var(--mf-blue); color: white; border: none; padding: 5px 10px;
+            border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;
         }
 
-        /* Auth */
-        .auth-card { background: var(--mf-card); padding: 30px; border-radius: 12px; max-width: 400px; margin: 50px auto; border: 1px solid var(--mf-border); }
+        .auth-card { background: var(--mf-card); padding: 30px; border-radius: 12px; max-width: 350px; margin: 50px auto; }
         input { width: 100%; padding: 12px; margin-bottom: 15px; background: #0d0e10; border: 1px solid var(--mf-border); color: white; border-radius: 6px; box-sizing: border-box; }
         .btn-main { width: 100%; padding: 12px; background: var(--mf-blue); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-        .logout-link { color: #ff4d4d; font-size: 12px; cursor: pointer; text-decoration: underline; }
+        .logout-link { color: #ff4d4d; font-size: 12px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -84,7 +82,7 @@
 
     <header>
         <div class="logo">Au<span>plodes</span></div>
-        <div id="user-info" style="display:flex; align-items:center; gap:10px;"></div>
+        <div id="user-info"></div>
     </header>
 
     <div class="container">
@@ -108,15 +106,14 @@
             </div>
 
             <div class="upload-section">
-                <h3>Upload Your Content</h3>
+                <h3>Select File</h3>
                 <input type="hidden" role="uploadcare-uploader" 
                        data-public-key="d2dac43b0699b5b058d8" 
-                       data-tabs="file facebook gdrive" 
                        id="uploader-input" />
 
                 <div id="upload-status-box">
-                    <div style="display:flex; justify-content:space-between; font-size:14px;">
-                        <span id="fname-display">File Name...</span>
+                    <div style="display:flex; justify-content:space-between; font-size:13px;">
+                        <span id="fname-display" style="color:#aaa;">Starting...</span>
                         <span id="p-text" style="color:var(--mf-blue); font-weight:bold;">0%</span>
                     </div>
                     <div class="pg-container">
@@ -125,24 +122,24 @@
                 </div>
             </div>
 
-            <h3>📁 My Files</h3>
+            <h3 style="margin: 15px 0 10px 0; font-size:18px;">📁 My Files</h3>
             <div class="file-list">
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Date</th>
+                            <th>File Name</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="file-table-body"></tbody>
+                    <tbody id="file-table-body">
+                        </tbody>
                 </table>
             </div>
         </div>
     </div>
 
     <script>
-        // Check Session
+        // Session Management
         window.onload = () => {
             const user = localStorage.getItem('logged_user');
             if(user) { showDash(user); loadFiles(); }
@@ -150,7 +147,7 @@
 
         function login() {
             const u = document.getElementById('uname').value;
-            if(!u) return alert("Username bhariye!");
+            if(!u) return alert("Pehle Username bhariye!");
             localStorage.setItem('logged_user', u);
             showDash(u);
             loadFiles();
@@ -160,7 +157,7 @@
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
             document.getElementById('user-info').innerHTML = `
-                <span style="font-size:13px">${user}</span>
+                <span style="font-size:13px">${user}</span> | 
                 <span class="logout-link" onclick="logout()">Logout</span>
             `;
         }
@@ -170,27 +167,28 @@
             location.reload();
         }
 
-        // --- UPLOAD & PROGRESS LOGIC ---
+        // --- FIXED UPLOAD LOGIC ---
         const widget = uploadcare.Widget('#uploader-input');
         const statusBox = document.getElementById('upload-status-box');
         const progressBar = document.getElementById('pg-bar-fill');
         const progressText = document.getElementById('p-text');
         const nameDisplay = document.getElementById('fname-display');
 
-        // File Selection Event
-        widget.onUploadStart((file) => {
+        // onChange trigger hota hai jaise hi file select hoti hai
+        widget.onChange(function(file) {
             if (file) {
                 statusBox.style.display = 'block';
                 
-                file.progress((info) => {
+                // Track Progress
+                file.progress(function(info) {
                     const percent = Math.round(info.progress * 100);
                     progressBar.style.width = percent + '%';
                     progressText.innerText = percent + '%';
-                    // Video me progress isi vajah se nahi dikh raha tha
-                    if(info.name) nameDisplay.innerText = "Uploading: " + info.name;
+                    if(info.name) nameDisplay.innerText = info.name;
                 });
 
-                file.done((info) => {
+                // When Done
+                file.done(function(info) {
                     statusBox.style.display = 'none';
                     saveFile(info.name, info.uuid);
                 });
@@ -200,9 +198,9 @@
         function saveFile(name, uuid) {
             let list = JSON.parse(localStorage.getItem('user_files') || '[]');
             
-            // Generate full path link
-            const currentPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
-            const downloadUrl = window.location.origin + currentPath + "download.html?fileId=" + uuid + "&name=" + encodeURIComponent(name);
+            // Premium Link Generation
+            const baseUrl = window.location.href.split('index.html')[0];
+            const downloadUrl = baseUrl + "download.html?fileId=" + uuid + "&name=" + encodeURIComponent(name);
 
             const newFile = {
                 name: name,
@@ -210,10 +208,10 @@
                 date: new Date().toLocaleDateString()
             };
 
-            list.push(newFile);
+            list.unshift(newFile); // Nayi file sabse upar dikhegi
             localStorage.setItem('user_files', JSON.stringify(list));
             loadFiles();
-            alert("File Uploaded & Link Generated!");
+            alert("Success! Link Generated in My Files.");
         }
 
         function loadFiles() {
@@ -221,20 +219,29 @@
             const tbody = document.getElementById('file-table-body');
             document.getElementById('file-count').innerText = list.length;
             
-            tbody.innerHTML = list.reverse().map(f => `
+            if(list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#555; padding:20px;">No files uploaded yet.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = list.map(f => `
                 <tr>
-                    <td>📄 ${f.name}</td>
-                    <td style="color:#777">${f.date}</td>
+                    <td><div style="width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 ${f.name}</div></td>
                     <td><button class="copy-btn" onclick="copyLink('${f.url}')">Copy Link</button></td>
                 </tr>
             `).join('');
         }
 
         function copyLink(url) {
-            navigator.clipboard.writeText(url);
-            alert("Link copied to clipboard!");
+            const el = document.createElement('textarea');
+            el.value = url;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert("Link Copied!");
         }
     </script>
 </body>
-                    </html>
-    
+    </html>
+                            
