@@ -3,148 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auplodes - MediaFire Edition</title>
+    <title>Download File | Auplodes</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         
         body {
             background-color: #0d0e10;
             color: #ffffff;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
 
-        .dl-container {
+        .dl-card {
             background: #1a1c1e;
             width: 90%;
-            max-width: 800px;
-            border-radius: 8px;
-            display: flex;
-            flex-wrap: wrap;
-            border: 1px solid #3a3f44;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-        }
-
-        /* Left Side - File Info */
-        .file-info {
-            flex: 1;
+            max-width: 500px;
             padding: 40px;
-            border-right: 1px solid #3a3f44;
-            min-width: 300px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid #333;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
-        .file-icon {
-            font-size: 50px;
-            margin-bottom: 20px;
-            color: #007bff;
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 123, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
         }
 
         .file-name {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             margin-bottom: 10px;
-            word-break: break-all;
+            word-wrap: break-word;
         }
 
-        .file-details {
+        .file-meta {
             color: #888;
             font-size: 14px;
             margin-bottom: 30px;
         }
 
-        /* Right Side - Download Button */
-        .dl-action {
-            flex: 1;
-            background: #111315;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-width: 300px;
-        }
-
-        .mf-dl-btn {
+        .dl-btn {
+            display: block;
             background: #007bff;
             color: white;
             text-decoration: none;
-            padding: 20px 50px;
-            border-radius: 4px;
-            font-weight: 700;
-            font-size: 18px;
-            text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+            padding: 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
             transition: 0.3s;
-            text-align: center;
-            width: 80%;
         }
 
-        .mf-dl-btn:hover {
-            background: #0056b3;
-            transform: translateY(-2px);
-        }
+        .dl-btn:hover { background: #0056b3; transform: scale(1.02); }
 
-        .sub-info {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #555;
-        }
-
-        footer {
-            position: absolute;
-            bottom: 20px;
-            color: #444;
-            font-size: 12px;
-        }
-
-        @media (max-width: 600px) {
-            .file-info { border-right: none; border-bottom: 1px solid #3a3f44; }
-        }
+        .brand { margin-top: 25px; font-size: 12px; color: #555; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
-    <div class="dl-container">
-        <div class="file-info">
-            <div class="file-icon">📁</div>
-            <div class="file-name" id="display-name">Loading...</div>
-            <div class="file-details">
-                <p>Type: Archive / File</p>
-                <p>Security: Verified by Auplodes</p>
-            </div>
-            <p style="color:#007bff; font-size:12px; font-weight:bold;">Powered by ANKIT X MODZ</p>
-        </div>
-
-        <div class="dl-action">
-            <a href="#" id="dl-trigger" class="mf-dl-btn">Download Now</a>
-            <div class="sub-info">File is ready. Your download will start instantly.</div>
-        </div>
+    <div class="dl-card" id="main-content">
+        <div class="icon-circle">📁</div>
+        <div class="file-name" id="fname">Loading file...</div>
+        <div class="file-meta">Verified Secure • No Ads • High Speed</div>
+        
+        <a href="#" id="dl-link" class="dl-btn">DOWNLOAD NOW</a>
+        
+        <div class="brand">POWERED BY AUPLODES.IN</div>
     </div>
 
-    <footer>© 2026 Auplodes.in | Secure Cloud Storage</footer>
-
     <script>
-        // MediaFire Style URL Parsing
-        const urlParams = new URLSearchParams(window.location.search);
-        const fileId = urlParams.get('fileId');
-        const fileName = urlParams.get('name');
+        const params = new URLSearchParams(window.location.search);
+        const fid = params.get('fileId');
+        const name = params.get('name');
 
-        if(fileId) {
-            document.getElementById('display-name').innerText = decodeURIComponent(fileName);
-            // Uploadcare Direct CDN Link
-            const directLink = `https://ucarecdn.com/${fileId}/-/inline/no/${fileName}`;
-            document.getElementById('dl-trigger').href = directLink;
-            document.getElementById('dl-trigger').setAttribute('download', fileName);
+        if(fid && name) {
+            document.getElementById('fname').innerText = decodeURIComponent(name);
+            const directUrl = `https://ucarecdn.com/${fid}/-/inline/no/${name}`;
+            document.getElementById('dl-link').href = directUrl;
         } else {
-            document.querySelector('.dl-container').innerHTML = "<div style='padding:50px;'>Invalid or Expired Link</div>";
+            document.getElementById('main-content').innerHTML = "<h3>Invalid Link</h3><p>The file may have been deleted.</p>";
         }
     </script>
 </body>
-                                                                                                   </html>
-                                                                                                   
+</html>
