@@ -9,16 +9,16 @@
         body { background-color: #0d0e10; color: #fff; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .dl-card { background: #1a1c1e; width: 90%; max-width: 400px; padding: 40px; border-radius: 20px; text-align: center; border: 1px solid #333; box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
         .icon { font-size: 50px; margin-bottom: 20px; }
-        .file-name { font-size: 18px; font-weight: 700; margin-bottom: 30px; word-wrap: break-word; }
-        .dl-btn { display: block; background: #007bff; color: white; text-decoration: none; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; border: none; width: 100%; }
-        .dl-btn:disabled { background: #444; cursor: not-allowed; }
+        .file-name { font-size: 18px; font-weight: 700; margin-bottom: 30px; word-wrap: break-word; color: #007bff; }
+        .dl-btn { display: block; background: #007bff; color: white; text-decoration: none; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
+        .dl-btn:active { transform: scale(0.98); }
         .footer { margin-top: 25px; font-size: 10px; color: #555; letter-spacing: 1px; }
     </style>
 </head>
 <body>
     <div class="dl-card" id="content">
         <div class="icon">📁</div>
-        <div class="file-name" id="fname">Preparing File...</div>
+        <div class="file-name" id="fname">Loading File...</div>
         <button id="dl-btn" class="dl-btn" onclick="startDownload()">DOWNLOAD NOW</button>
         <div class="footer">POWERED BY AUPLODES.IN</div>
     </div>
@@ -31,32 +31,36 @@
         if(fid) {
             document.getElementById('fname').innerText = fname;
         } else {
-            document.getElementById('content').innerHTML = "Invalid Link";
+            document.getElementById('content').innerHTML = "Invalid Link Provided.";
         }
 
         async function startDownload() {
             const btn = document.getElementById('dl-btn');
             btn.disabled = true;
-            btn.innerText = "Downloading...";
+            btn.innerText = "Processing...";
 
-            // Direct Uploadcare File Link
-            const fileUrl = `https://ucarecdn.com/${fid}/-/inline/no/`;
+            // Fixed: Using exact file endpoint to avoid 404/Error files
+            const fileUrl = `https://ucarecdn.com/${fid}/`;
 
             try {
                 const response = await fetch(fileUrl);
+                if (!response.ok) throw new Error('File not found');
+                
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.style.display = 'none';
                 a.href = url;
-                a.download = fname; // Forced filename
+                a.download = fname; // This ensures original name is kept
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
                 btn.innerText = "Downloaded!";
+                btn.disabled = false;
             } catch (err) {
-                // Fallback if fetch fails
-                window.location.href = fileUrl;
+                // If background fetch fails, open in new tab as fallback
+                window.open(fileUrl, '_blank');
+                btn.innerText = "Download Started";
+                btn.disabled = false;
             }
         }
     </script>
