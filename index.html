@@ -3,213 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auplodes | Premium Cloud Hosting</title>
+    <title>Auplodes | MediaFire Edition</title>
     <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
         
         :root {
-            --bg: #030712;
-            --card: #111827;
-            --accent: #38bdf8;
-            --border: #1f2937;
-            --text: #f9fafb;
+            --mf-blue: #007bff;
+            --mf-dark: #1a1c1e;
+            --mf-bg: #0d0e10;
+            --mf-card: #25282c;
+            --mf-border: #3a3f44;
+            --text: #ffffff;
         }
 
         body {
-            background-color: var(--bg);
+            background-color: var(--mf-bg);
             color: var(--text);
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            padding: 0;
         }
 
-        /* Rainbow Telegram Box */
-        .tg-box {
-            margin-top: 30px;
-            width: 90%;
-            max-width: 450px;
-            background: rgba(0,0,0,0.8);
-            border-radius: 15px;
-            padding: 12px;
+        /* Rainbow Telegram Banner (Custom Requirement) */
+        .rainbow-banner {
+            width: 100%;
+            padding: 10px 0;
             text-align: center;
-            font-weight: 800;
-            border: 2px solid transparent;
-            animation: borderGlow 4s linear infinite;
+            font-weight: bold;
+            background: #000;
+            border-bottom: 2px solid;
+            animation: mfRainbow 3s linear infinite;
         }
-        @keyframes borderGlow {
-            0% { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
-            25% { border-color: #00ff00; box-shadow: 0 0 15px #00ff00; }
-            50% { border-color: #0000ff; box-shadow: 0 0 15px #0000ff; }
-            100% { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+        @keyframes mfRainbow {
+            0% { border-color: red; color: red; }
+            33% { border-color: lime; color: lime; }
+            66% { border-color: blue; color: blue; }
+            100% { border-color: red; color: red; }
         }
 
-        .main-container {
-            width: 90%;
-            max-width: 500px;
-            background: var(--card);
-            margin: 40px auto;
+        /* MediaFire Header */
+        header {
+            background: var(--mf-dark);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--mf-border);
+        }
+        .logo { font-size: 24px; font-weight: 700; color: var(--mf-blue); letter-spacing: -1px; }
+        .logo span { color: white; }
+
+        /* Main Container */
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        /* Login Card */
+        .auth-card {
+            background: var(--mf-card);
+            border-radius: 8px;
             padding: 40px;
-            border-radius: 30px;
-            border: 1px solid var(--border);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 450px;
+            margin: 0 auto;
+            border: 1px solid var(--mf-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
+        .auth-card h2 { margin-top: 0; font-weight: 500; text-align: center; }
 
-        h1 { font-size: 3rem; font-weight: 800; margin: 0; background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .sub-text { color: #9ca3af; margin-bottom: 30px; }
-
-        /* Premium Form Styling */
-        .form-group { margin-bottom: 15px; text-align: left; }
+        .input-group { margin-bottom: 15px; }
         input {
             width: 100%;
-            padding: 14px;
-            background: #030712;
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            padding: 12px;
+            background: #1a1c1e;
+            border: 1px solid var(--mf-border);
+            border-radius: 4px;
             color: white;
             box-sizing: border-box;
-            transition: 0.3s;
+            outline: none;
         }
-        input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+        input:focus { border-color: var(--mf-blue); }
 
-        .btn {
+        .btn-blue {
             width: 100%;
-            padding: 15px;
-            background: var(--accent);
-            color: #000;
-            font-weight: 700;
+            padding: 14px;
+            background: var(--mf-blue);
+            color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 4px;
+            font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
-            transition: 0.3s;
+            text-transform: uppercase;
+            transition: 0.2s;
         }
-        .btn:hover { transform: scale(1.02); opacity: 0.9; }
+        .btn-blue:hover { background: #0056b3; }
 
-        /* Premium Loader */
-        #loader-section { display: none; margin: 30px 0; }
+        /* Dashboard Style (MediaFire Table) */
+        .dashboard { display: none; }
+        .upload-header {
+            display: flex;
+            justify-content: space-between;
+            background: var(--mf-card);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--mf-border);
+            margin-bottom: 20px;
+        }
+
+        /* Loading System (Left to Right Bar) */
+        #upload-status { display: none; margin-top: 20px; text-align: left; }
         .progress-container {
             width: 100%;
-            height: 12px;
-            background: #1f2937;
-            border-radius: 10px;
+            background: #1a1c1e;
+            height: 10px;
+            border-radius: 5px;
             overflow: hidden;
-            margin-bottom: 10px;
+            margin: 10px 0;
+            border: 1px solid var(--mf-border);
         }
         .progress-bar {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, #0ea5e9, #6366f1);
-            transition: width 0.3s ease;
-            box-shadow: 0 0 15px var(--accent);
+            background: var(--mf-blue);
+            transition: width 0.3s;
+            box-shadow: 0 0 10px var(--mf-blue);
         }
-        .percent-text { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+        .percent-label { font-size: 14px; color: var(--mf-blue); font-weight: bold; }
 
-        /* Hidden Section */
-        .hidden { display: none; }
-
-        /* Result Link */
-        #result-url {
-            margin-top: 20px;
-            background: #030712;
+        /* File Result */
+        .file-box {
+            background: #1a1c1e;
             padding: 15px;
-            border-radius: 10px;
-            border: 1px dashed var(--accent);
-            word-break: break-all;
-            color: #38bdf8;
-            font-size: 0.9rem;
+            border-left: 4px solid var(--mf-blue);
+            margin-top: 20px;
+            display: none;
         }
+        .file-link { color: #888; font-size: 13px; margin-bottom: 10px; word-break: break-all; }
     </style>
 </head>
 <body>
 
-    <div class="tg-box">
-        <a href="https://t.me/+PvAMD5GrdcBkNDE1" target="_blank" style="color:white; text-decoration:none;">JOIN TELEGRAM COMMUNITY</a>
+    <div class="rainbow-banner">
+        <a href="https://t.me/+PvAMD5GrdcBkNDE1" target="_blank" style="color:inherit; text-decoration:none;">JOIN ANKIT X MODZ TELEGRAM</a>
     </div>
 
-    <div class="main-container">
-        <h1>Auplodes</h1>
-        <p class="sub-text">ANKIT X MODZ</p>
+    <header>
+        <div class="logo">Au<span>plodes</span></div>
+        <div id="user-info" style="font-size: 14px; color: #aaa;"></div>
+    </header>
 
-        <div id="auth-view">
-            <div class="form-group"><input type="text" id="fullname" placeholder="Full Name"></div>
-            <div class="form-group"><input type="text" id="username" placeholder="Username"></div>
-            <div class="form-group"><input type="email" id="email" placeholder="Email Address"></div>
-            <div class="form-group"><input type="password" id="pass" placeholder="Password"></div>
-            <div class="form-group"><input type="password" id="cpass" placeholder="Confirm Password"></div>
-            <button class="btn" onclick="register()">Create Premium Account</button>
+    <div class="container">
+        <div id="auth-section" class="auth-card">
+            <h2>Create Account</h2>
+            <div class="input-group"><input type="text" id="fname" placeholder="Full Name"></div>
+            <div class="input-group"><input type="text" id="uname" placeholder="Username"></div>
+            <div class="input-group"><input type="email" id="email" placeholder="Email Address"></div>
+            <div class="input-group"><input type="password" id="pass" placeholder="Password"></div>
+            <div class="input-group"><input type="password" id="cpass" placeholder="Confirm Password"></div>
+            <button class="btn-blue" onclick="handleAuth()">Sign Up & Upload</button>
         </div>
 
-        <div id="upload-view" class="hidden">
-            <h3 id="welcome-msg"></h3>
-            <input type="hidden" role="uploadcare-uploader" data-public-key="d2dac43b0699b5b058d8" id="uploader" />
-            
-            <div id="loader-section">
-                <div class="percent-text" id="percent">0%</div>
-                <div class="progress-container">
-                    <div class="progress-bar" id="bar"></div>
+        <div id="dashboard" class="dashboard">
+            <div class="upload-header">
+                <div>
+                    <h2 style="margin:0;">My Files</h2>
+                    <p style="color:#888; margin:5px 0 0 0; font-size:14px;">Upload your APK, Zip, or Media files.</p>
                 </div>
-                <p style="font-size: 0.8rem; color: #9ca3af;">Encrypting & Uploading...</p>
+                <input type="hidden" role="uploadcare-uploader" data-public-key="d2dac43b0699b5b058d8" id="uploader" />
             </div>
 
-            <div id="result-box" class="hidden">
-                <div id="result-url"></div>
-                <button class="btn" onclick="copyLink()">Copy Auplodes.in Link</button>
+            <div id="upload-status">
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="font-size:14px;">Uploading File...</span>
+                    <span class="percent-label" id="percent-val">0%</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="pb"></div>
+                </div>
+            </div>
+
+            <div id="file-result" class="file-box">
+                <div style="font-weight:bold; margin-bottom:5px;">✅ File Ready to Share:</div>
+                <div class="file-link" id="share-url"></div>
+                <button class="btn-blue" style="width:auto; padding:8px 20px;" onclick="copyLink()">Copy Auplodes.in Link</button>
             </div>
         </div>
     </div>
 
     <script>
-        function register() {
-            const name = document.getElementById('fullname').value;
+        function handleAuth() {
+            const fullName = document.getElementById('fname').value;
+            const user = document.getElementById('uname').value;
             const pass = document.getElementById('pass').value;
             const cpass = document.getElementById('cpass').value;
 
-            if(!name || !pass) return alert("Saare box bharo!");
-            if(pass !== cpass) return alert("Password match nahi ho raha!");
-            if(pass.length < 8) return alert("Password kam se kam 8 digits ka ho!");
+            if(!fullName || !user || !pass) return alert("Pehle sabhi details bharein!");
+            if(pass !== cpass) return alert("Password match nahi hua!");
+            if(pass.length < 8) return alert("Password 8 characters ka hona chahiye!");
 
-            document.getElementById('auth-view').classList.add('hidden');
-            document.getElementById('upload-view').classList.remove('hidden');
-            document.getElementById('welcome-msg').innerText = "Hello, " + name;
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('user-info').innerText = "Logged in as: " + user;
         }
 
         const widget = uploadcare.Widget('#uploader');
-        const loader = document.getElementById('loader-section');
-        const bar = document.getElementById('bar');
-        const percent = document.getElementById('percent');
+        const statusDiv = document.getElementById('upload-status');
+        const progressBar = document.getElementById('pb');
+        const percentLabel = document.getElementById('percent-val');
+        const resultBox = document.getElementById('file-result');
 
         widget.onUploadStart((file) => {
-            loader.style.display = 'block';
-            document.getElementById('result-box').classList.add('hidden');
+            statusDiv.style.display = 'block';
+            resultBox.style.display = 'none';
             file.progress((info) => {
                 let p = Math.round(info.progress * 100);
-                bar.style.width = p + '%';
-                percent.innerText = p + '%';
+                progressBar.style.width = p + '%';
+                percentLabel.innerText = p + '%';
             });
         });
 
         widget.onUploadComplete((info) => {
-            loader.style.display = 'none';
-            const resultBox = document.getElementById('result-box');
-            resultBox.classList.remove('hidden');
+            statusDiv.style.display = 'none';
+            resultBox.style.display = 'block';
 
-            // Custom link generation
-            const siteUrl = window.location.href.split('index.html')[0];
-            const finalLink = `${siteUrl}download.html?file=${info.uuid}&name=${encodeURIComponent(info.name)}&auth=Auplodes.in`;
+            // Automatic Premium Link Generation
+            const baseUrl = window.location.href.split('index.html')[0];
+            const finalLink = `${baseUrl}download.html?fileId=${info.uuid}&name=${encodeURIComponent(info.name)}&ref=Auplodes.in`;
             
-            document.getElementById('result-url').innerText = finalLink;
+            document.getElementById('share-url').innerText = finalLink;
         });
 
         function copyLink() {
-            const text = document.getElementById('result-url').innerText;
-            navigator.clipboard.writeText(text);
-            alert("Premium Link Copied! Last me Auplodes.in check karein.");
+            const url = document.getElementById('share-url').innerText;
+            navigator.clipboard.writeText(url);
+            alert("Auplodes.in Premium Link Copied!");
         }
     </script>
 </body>
-                </html>
-                    
+    </html>
+    
