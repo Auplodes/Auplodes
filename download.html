@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download File | Auplodes</title>
+    <title>Download | Auplodes</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         
@@ -21,79 +21,72 @@
         .dl-card {
             background: #1a1c1e;
             width: 90%;
-            max-width: 500px;
+            max-width: 450px;
             padding: 40px;
-            border-radius: 15px;
+            border-radius: 20px;
             text-align: center;
             border: 1px solid #333;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         }
 
-        .icon-circle {
-            width: 80px;
-            height: 80px;
-            background: rgba(0, 123, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 40px;
-        }
+        .icon { font-size: 60px; margin-bottom: 20px; }
 
         .file-name {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             margin-bottom: 10px;
+            color: #fff;
             word-wrap: break-word;
         }
 
-        .file-meta {
-            color: #888;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
+        .file-meta { color: #888; font-size: 14px; margin-bottom: 30px; }
 
         .dl-btn {
             display: block;
             background: #007bff;
             color: white;
             text-decoration: none;
-            padding: 18px;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: 12px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 18px;
             transition: 0.3s;
         }
 
-        .dl-btn:hover { background: #0056b3; transform: scale(1.02); }
+        .dl-btn:hover { background: #0056b3; transform: scale(1.03); }
 
-        .brand { margin-top: 25px; font-size: 12px; color: #555; letter-spacing: 1px; }
+        .footer { margin-top: 30px; font-size: 10px; color: #444; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-    <div class="dl-card" id="main-content">
-        <div class="icon-circle">📁</div>
-        <div class="file-name" id="fname">Loading file...</div>
-        <div class="file-meta">Verified Secure • No Ads • High Speed</div>
+    <div class="dl-card" id="content">
+        <div class="icon">📁</div>
+        <div class="file-name" id="fname">Loading...</div>
+        <div class="file-meta">Fast Download • Verified by Ankit X Modz</div>
         
-        <a href="#" id="dl-link" class="dl-btn">DOWNLOAD NOW</a>
+        <a href="#" id="dl-trigger" class="dl-btn">DOWNLOAD NOW</a>
         
-        <div class="brand">POWERED BY AUPLODES.IN</div>
+        <div class="footer">Powered by Auplodes.in</div>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
         const fid = params.get('fileId');
-        const name = params.get('name');
+        const fname = params.get('name');
 
-        if(fid && name) {
-            document.getElementById('fname').innerText = decodeURIComponent(name);
-            const directUrl = `https://ucarecdn.com/${fid}/-/inline/no/${name}`;
-            document.getElementById('dl-link').href = directUrl;
+        if(fid && fname) {
+            document.getElementById('fname').innerText = decodeURIComponent(fname);
+            
+            // --- FIXED CDN LINK FORMAT ---
+            // Naya link format jo Uploadcare strictly follow karta hai
+            const directLink = `https://ucarecdn.com/${fid}/-/inline/no/${encodeURIComponent(fname)}`;
+            
+            const btn = document.getElementById('dl-trigger');
+            btn.href = directLink;
+            btn.setAttribute('download', decodeURIComponent(fname));
         } else {
-            document.getElementById('main-content').innerHTML = "<h3>Invalid Link</h3><p>The file may have been deleted.</p>";
+            document.getElementById('content').innerHTML = "<h3>Error: Invalid Link</h3><p>Please try uploading the file again.</p>";
         }
     </script>
 </body>
