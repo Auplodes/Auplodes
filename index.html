@@ -3,20 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auplodes | Cloud Storage</title>
+    <title>Auplodes | Secure Media Storage</title>
     <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         :root { --mf-blue: #007bff; --mf-dark: #1a1c1e; --mf-bg: #0d0e10; --mf-card: #1e2124; --mf-border: #33383e; --text: #e0e0e0; }
         body { background-color: var(--mf-bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
 
-        .rainbow-banner { width: 100%; padding: 12px 0; text-align: center; font-weight: bold; background: #000; border-bottom: 2px solid; animation: mfRainbow 3s linear infinite; font-size: 14px; }
+        /* Rainbow Banner */
+        .rainbow-banner { width: 100%; padding: 12px 0; text-align: center; font-weight: bold; background: #000; border-bottom: 2px solid; animation: mfRainbow 3s linear infinite; font-size: 13px; }
         @keyframes mfRainbow { 0% { border-color: red; color: red; } 33% { border-color: lime; color: lime; } 66% { border-color: #0080ff; color: #0080ff; } 100% { border-color: red; color: red; } }
         
         header { background: var(--mf-dark); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--mf-border); }
         .logo { font-size: 22px; font-weight: 700; color: var(--mf-blue); }
+        .logo span { color: white; }
+
         .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
 
+        /* Dashboard Styles */
         #dashboard { display: none; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-card { background: var(--mf-card); padding: 15px; border-radius: 10px; border: 1px solid var(--mf-border); }
@@ -26,28 +30,29 @@
         .pg-container { width: 100%; background: #333; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
         .pg-bar { width: 0%; height: 100%; background: var(--mf-blue); transition: width 0.3s; }
         
-        .search-box { width: 100%; padding: 12px; background: #121416; border: 1px solid var(--mf-border); border-radius: 6px; color: white; margin-bottom: 15px; box-sizing: border-box; width: 100%; }
+        .search-box { width: 100%; padding: 12px; background: #121416; border: 1px solid var(--mf-border); border-radius: 6px; color: white; margin-bottom: 15px; box-sizing: border-box; }
 
         .file-list { background: var(--mf-card); border-radius: 10px; border: 1px solid var(--mf-border); overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
-        th { background: #2a2e33; padding: 12px; text-align: left; color: #888; font-size: 12px; }
+        th { background: #2a2e33; padding: 12px; text-align: left; color: #888; font-size: 11px; text-transform: uppercase; }
         td { padding: 12px; border-bottom: 1px solid var(--mf-border); font-size: 14px; }
         
         .copy-btn { background: var(--mf-blue); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
         .del-btn { background: #ff4d4d; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; margin-left: 5px; }
 
-        /* PROMOTION POPUP STYLE */
+        /* Promotion Overlay (Appears on link click) */
         #promo-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); display: none; z-index: 9999; 
+            background: rgba(0,0,0,0.98); display: none; z-index: 9999; 
             flex-direction: column; justify-content: center; align-items: center; text-align: center;
         }
-        .promo-content { background: #1a1c1e; padding: 40px; border-radius: 20px; border: 2px solid var(--mf-blue); max-width: 320px; }
-        .loader-ring { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid var(--mf-blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+        .promo-content { background: #1a1c1e; padding: 40px; border-radius: 20px; border: 1px solid var(--mf-blue); max-width: 350px; width: 80%; }
+        .loader-ring { width: 40px; height: 40px; border: 4px solid #333; border-top: 4px solid var(--mf-blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .auth-card { background: var(--mf-card); padding: 30px; border-radius: 12px; max-width: 350px; margin: 50px auto; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #0d0e10; border: 1px solid var(--mf-border); color: white; border-radius: 6px; box-sizing: border-box; }
+        .auth-card { background: var(--mf-card); padding: 30px; border-radius: 12px; max-width: 350px; margin: 50px auto; border: 1px solid var(--mf-border); }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #0d0e10; border: 1px solid var(--mf-border); color: white; border-radius: 6px; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--mf-blue); }
         .btn-main { width: 100%; padding: 12px; background: var(--mf-blue); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
@@ -55,43 +60,46 @@
 
     <div id="promo-overlay">
         <div class="promo-content">
-            <h2 style="color:var(--mf-blue); margin:0;">PROMOTED BY</h2>
-            <h1 style="margin:10px 0; letter-spacing:2px;">AUPLODES.IN</h1>
-            <p style="color:#888; font-size:14px;">Please wait... Your file is being prepared for download.</p>
+            <h3 style="color:var(--mf-blue); margin:0; font-size: 14px;">PROMOTED BY</h3>
+            <h1 style="margin:10px 0; letter-spacing:2px; font-size: 28px;">AUPLODES.IN</h1>
+            <p style="color:#888; font-size:13px; line-height: 1.5;">Please wait... We are generating your secure download link.</p>
             <div class="loader-ring"></div>
-            <div id="timer" style="font-weight:bold; font-size:20px; color:white;">5</div>
+            <div id="timer" style="font-weight:bold; font-size:24px; color:white;">5</div>
         </div>
     </div>
 
     <div class="rainbow-banner"><a href="https://t.me/+PvAMD5GrdcBkNDE1" target="_blank" style="color:inherit; text-decoration:none;">JOIN ANKIT X MODZ TELEGRAM</a></div>
     
-    <header><div class="logo">Au<span>plodes</span></div><div id="user-info"></div></header>
+    <header>
+        <div class="logo">Au<span>plodes</span></div>
+        <div id="user-info"></div>
+    </header>
 
     <div class="container">
         <div id="auth-section" class="auth-card">
-            <h2 style="text-align:center;">User Login</h2>
-            <input type="text" id="uname" placeholder="Username">
-            <input type="password" id="pass" placeholder="Password">
-            <button class="btn-main" onclick="login()">Login & Upload</button>
+            <h2 style="text-align:center; margin-top:0;">User Login</h2>
+            <input type="text" id="uname" placeholder="Enter Username">
+            <input type="password" id="pass" placeholder="Enter Password">
+            <button class="btn-main" onclick="login()">Access Dashboard</button>
         </div>
 
         <div id="dashboard">
             <div class="stats-grid">
-                <div class="stat-card"><small style="color:#888">Storage</small><div style="font-weight:bold">Unlimited</div></div>
-                <div class="stat-card"><small style="color:#888">Files</small><div id="file-count" style="font-weight:bold">0</div></div>
+                <div class="stat-card"><small style="color:#888">Server Status</small><div style="font-weight:bold; color: lime;">Online</div></div>
+                <div class="stat-card"><small style="color:#888">Total Files</small><div id="file-count" style="font-weight:bold">0</div></div>
             </div>
 
             <div class="upload-section">
-                <h3>Select File</h3>
+                <h3 style="margin-top:0;">Upload New File</h3>
                 <input type="hidden" role="uploadcare-uploader" data-public-key="d2dac43b0699b5b058d8" id="uploader-input" />
                 <div id="upload-status-box">
-                    <div style="display:flex; justify-content:space-between; font-size:13px;"><span id="fname-display">Starting...</span><span id="p-text" style="color:var(--mf-blue); font-weight:bold;">0%</span></div>
+                    <div style="display:flex; justify-content:space-between; font-size:12px;"><span id="fname-display">Processing...</span><span id="p-text" style="color:var(--mf-blue); font-weight:bold;">0%</span></div>
                     <div class="pg-container"><div class="pg-bar" id="pg-bar-fill"></div></div>
                 </div>
             </div>
 
-            <h3 style="margin: 15px 0 10px 0;">📁 My Uploads</h3>
-            <input type="text" class="search-box" id="fileSearch" placeholder="Search files..." onkeyup="filterFiles()">
+            <h3 style="margin: 20px 0 10px 0;">📁 My Secure Files</h3>
+            <input type="text" class="search-box" id="fileSearch" placeholder="Search by filename..." onkeyup="filterFiles()">
             
             <div class="file-list">
                 <table>
@@ -103,13 +111,14 @@
     </div>
 
     <script>
-        // --- 1. PROMOTION LOGIC (FOR VISITORS) ---
+        // --- 1. PROMO POPUP LOGIC ---
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
-            const fid = params.get('f'); // Link format: index.html?f=UUID&n=NAME
+            const fid = params.get('f'); 
             const fname = params.get('n');
 
-            if (fid) {
+            if (fid && fname) {
+                // If it's a shared link, show the promo screen
                 document.getElementById('promo-overlay').style.display = 'flex';
                 let count = 5;
                 const countdown = setInterval(() => {
@@ -117,21 +126,21 @@
                     document.getElementById('timer').innerText = count;
                     if (count <= 0) {
                         clearInterval(countdown);
-                        // Redirect to direct CDN download link
-                        window.location.href = `https://ucarecdn.com/${fid}/${fname}`;
+                        // Redirect directly to the secure CDN source
+                        window.location.href = `https://ucarecdn.com/${fid}/${decodeURIComponent(fname)}`;
                     }
                 }, 1000);
             } else {
-                // Normal view: Check for logged in user
+                // Normal dashboard view
                 const user = localStorage.getItem('logged_user');
                 if(user) { showDash(user); loadFiles(); }
             }
         }
 
-        // --- 2. DASHBOARD LOGIC ---
+        // --- 2. LOGIN & DASHBOARD LOGIC ---
         function login() {
             const u = document.getElementById('uname').value;
-            if(!u) return alert("Username bhariye!");
+            if(!u) return alert("Username is required!");
             localStorage.setItem('logged_user', u);
             showDash(u);
             loadFiles();
@@ -140,7 +149,7 @@
         function showDash(user) {
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
-            document.getElementById('user-info').innerHTML = `<span style="font-size:13px">${user}</span> | <span style="color:#ff4d4d; cursor:pointer;" onclick="logout()">Logout</span>`;
+            document.getElementById('user-info').innerHTML = `<span style="font-size:13px; font-weight:600;">${user}</span> | <span style="color:#ff4d4d; cursor:pointer; font-size:12px;" onclick="logout()">Logout</span>`;
         }
 
         function logout() { localStorage.removeItem('logged_user'); location.reload(); }
@@ -164,22 +173,24 @@
 
         function saveFile(name, uuid) {
             let list = JSON.parse(localStorage.getItem('user_files') || '[]');
-            const loc = window.location.origin + window.location.pathname;
-            // SMART LINK: Jo issi index page par promotional popup trigger karega
-            const smartLink = `${loc}?f=${uuid}&n=${encodeURIComponent(name)}`;
+            // Get current page URL to create the smart link
+            const baseUrl = window.location.origin + window.location.pathname;
+            const smartLink = `${baseUrl}?f=${uuid}&n=${encodeURIComponent(name)}`;
 
-            list.unshift({ id: 'f_' + Date.now(), name: name, url: smartLink });
+            list.unshift({ id: 'id_' + Date.now(), name: name, url: smartLink });
             localStorage.setItem('user_files', JSON.stringify(list));
             loadFiles();
+            alert("File Link Generated!");
         }
 
         function loadFiles() {
             const list = JSON.parse(localStorage.getItem('user_files') || '[]');
             const tbody = document.getElementById('file-table-body');
             document.getElementById('file-count').innerText = list.length;
+            
             tbody.innerHTML = list.map(f => `
                 <tr id="${f.id}">
-                    <td><div style="width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 ${f.name}</div></td>
+                    <td><div style="width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 ${f.name}</div></td>
                     <td>
                         <button class="copy-btn" onclick="copyLink('${f.url}')">Copy</button>
                         <button class="del-btn" onclick="deleteFile('${f.id}')">Delete</button>
@@ -188,11 +199,11 @@
             `).join('');
         }
 
-        function deleteFile(uniqueId) {
-            if(!confirm("Delete karein?")) return;
+        function deleteFile(targetId) {
+            if(!confirm("Are you sure you want to delete this file?")) return;
             let list = JSON.parse(localStorage.getItem('user_files') || '[]');
-            const newList = list.filter(item => item.id !== uniqueId);
-            localStorage.setItem('user_files', JSON.stringify(newList));
+            list = list.filter(item => item.id !== targetId);
+            localStorage.setItem('user_files', JSON.stringify(list));
             loadFiles();
         }
 
@@ -204,9 +215,8 @@
 
         function copyLink(url) {
             const el = document.createElement('textarea'); el.value = url; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
-            alert("Auplodes Promo Link Copied!");
+            alert("Promo Link Copied!");
         }
     </script>
 </body>
-    </html>
-    
+</html>
