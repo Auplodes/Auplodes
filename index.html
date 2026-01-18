@@ -8,33 +8,63 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         :root { --mf-blue: #007bff; --mf-dark: #1a1c1e; --mf-bg: #0d0e10; --mf-card: #1e2124; --mf-border: #33383e; --text: #e0e0e0; }
-        body { background-color: var(--mf-bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; }
+        body { background-color: var(--mf-bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+
         .rainbow-banner { width: 100%; padding: 12px 0; text-align: center; font-weight: bold; background: #000; border-bottom: 2px solid; animation: mfRainbow 3s linear infinite; font-size: 14px; }
         @keyframes mfRainbow { 0% { border-color: red; color: red; } 33% { border-color: lime; color: lime; } 66% { border-color: #0080ff; color: #0080ff; } 100% { border-color: red; color: red; } }
+        
         header { background: var(--mf-dark); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--mf-border); }
         .logo { font-size: 22px; font-weight: 700; color: var(--mf-blue); }
         .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
+
         #dashboard { display: none; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-card { background: var(--mf-card); padding: 15px; border-radius: 10px; border: 1px solid var(--mf-border); }
+        
         .upload-section { background: var(--mf-card); padding: 25px; border-radius: 12px; border: 2px dashed var(--mf-border); text-align: center; margin-bottom: 25px; }
         #upload-status-box { display: none; background: #121416; padding: 20px; border-radius: 8px; margin-top: 15px; text-align: left; }
         .pg-container { width: 100%; background: #333; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
         .pg-bar { width: 0%; height: 100%; background: var(--mf-blue); transition: width 0.3s; }
-        .search-box { width: 100%; padding: 12px; background: #121416; border: 1px solid var(--mf-border); border-radius: 6px; color: white; margin-bottom: 15px; box-sizing: border-box; }
+        
+        .search-box { width: 100%; padding: 12px; background: #121416; border: 1px solid var(--mf-border); border-radius: 6px; color: white; margin-bottom: 15px; box-sizing: border-box; width: 100%; }
+
         .file-list { background: var(--mf-card); border-radius: 10px; border: 1px solid var(--mf-border); overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
         th { background: #2a2e33; padding: 12px; text-align: left; color: #888; font-size: 12px; }
         td { padding: 12px; border-bottom: 1px solid var(--mf-border); font-size: 14px; }
+        
         .copy-btn { background: var(--mf-blue); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
         .del-btn { background: #ff4d4d; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; margin-left: 5px; }
+
+        /* PROMOTION POPUP STYLE */
+        #promo-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); display: none; z-index: 9999; 
+            flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        }
+        .promo-content { background: #1a1c1e; padding: 40px; border-radius: 20px; border: 2px solid var(--mf-blue); max-width: 320px; }
+        .loader-ring { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid var(--mf-blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         .auth-card { background: var(--mf-card); padding: 30px; border-radius: 12px; max-width: 350px; margin: 50px auto; }
         input { width: 100%; padding: 12px; margin-bottom: 15px; background: #0d0e10; border: 1px solid var(--mf-border); color: white; border-radius: 6px; box-sizing: border-box; }
         .btn-main { width: 100%; padding: 12px; background: var(--mf-blue); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
+
+    <div id="promo-overlay">
+        <div class="promo-content">
+            <h2 style="color:var(--mf-blue); margin:0;">PROMOTED BY</h2>
+            <h1 style="margin:10px 0; letter-spacing:2px;">AUPLODES.IN</h1>
+            <p style="color:#888; font-size:14px;">Please wait... Your file is being prepared for download.</p>
+            <div class="loader-ring"></div>
+            <div id="timer" style="font-weight:bold; font-size:20px; color:white;">5</div>
+        </div>
+    </div>
+
     <div class="rainbow-banner"><a href="https://t.me/+PvAMD5GrdcBkNDE1" target="_blank" style="color:inherit; text-decoration:none;">JOIN ANKIT X MODZ TELEGRAM</a></div>
+    
     <header><div class="logo">Au<span>plodes</span></div><div id="user-info"></div></header>
 
     <div class="container">
@@ -73,11 +103,32 @@
     </div>
 
     <script>
+        // --- 1. PROMOTION LOGIC (FOR VISITORS) ---
         window.onload = () => {
-            const user = localStorage.getItem('logged_user');
-            if(user) { showDash(user); loadFiles(); }
+            const params = new URLSearchParams(window.location.search);
+            const fid = params.get('f'); // Link format: index.html?f=UUID&n=NAME
+            const fname = params.get('n');
+
+            if (fid) {
+                document.getElementById('promo-overlay').style.display = 'flex';
+                let count = 5;
+                const countdown = setInterval(() => {
+                    count--;
+                    document.getElementById('timer').innerText = count;
+                    if (count <= 0) {
+                        clearInterval(countdown);
+                        // Redirect to direct CDN download link
+                        window.location.href = `https://ucarecdn.com/${fid}/${fname}`;
+                    }
+                }, 1000);
+            } else {
+                // Normal view: Check for logged in user
+                const user = localStorage.getItem('logged_user');
+                if(user) { showDash(user); loadFiles(); }
+            }
         }
 
+        // --- 2. DASHBOARD LOGIC ---
         function login() {
             const u = document.getElementById('uname').value;
             if(!u) return alert("Username bhariye!");
@@ -113,12 +164,11 @@
 
         function saveFile(name, uuid) {
             let list = JSON.parse(localStorage.getItem('user_files') || '[]');
-            const loc = window.location.href;
-            const directory = loc.substring(0, loc.lastIndexOf('/'));
-            // Premium looking download page link
-            const downloadUrl = `${directory}/download.html?fileId=${uuid}&name=${encodeURIComponent(name)}`;
+            const loc = window.location.origin + window.location.pathname;
+            // SMART LINK: Jo issi index page par promotional popup trigger karega
+            const smartLink = `${loc}?f=${uuid}&n=${encodeURIComponent(name)}`;
 
-            list.unshift({ id: 'f_' + Date.now(), name: name, url: downloadUrl });
+            list.unshift({ id: 'f_' + Date.now(), name: name, url: smartLink });
             localStorage.setItem('user_files', JSON.stringify(list));
             loadFiles();
         }
@@ -139,7 +189,7 @@
         }
 
         function deleteFile(uniqueId) {
-            if(!confirm("Sirf yahi file delete hogi. Karein?")) return;
+            if(!confirm("Delete karein?")) return;
             let list = JSON.parse(localStorage.getItem('user_files') || '[]');
             const newList = list.filter(item => item.id !== uniqueId);
             localStorage.setItem('user_files', JSON.stringify(newList));
@@ -154,9 +204,9 @@
 
         function copyLink(url) {
             const el = document.createElement('textarea'); el.value = url; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
-            alert("Download Page Link Copied!");
+            alert("Auplodes Promo Link Copied!");
         }
     </script>
 </body>
-                                           </html>
-                 
+    </html>
+    
