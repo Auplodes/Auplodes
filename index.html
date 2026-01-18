@@ -105,9 +105,7 @@
 
             <div class="upload-section">
                 <h3>Select File</h3>
-                <input type="hidden" role="uploadcare-uploader" 
-                       data-public-key="d2dac43b0699b5b058d8" 
-                       id="uploader-input" />
+                <input type="hidden" role="uploadcare-uploader" data-public-key="d2dac43b0699b5b058d8" id="uploader-input" />
 
                 <div id="upload-status-box">
                     <div style="display:flex; justify-content:space-between; font-size:13px;">
@@ -189,8 +187,7 @@
         function saveFile(name, uuid) {
             let list = JSON.parse(localStorage.getItem('user_files') || '[]');
             
-            // --- GITHUB PAGES LINK FIX ---
-            // Hum current URL se index.html ko remove karke download.html jodenge
+            // GitHub Pages Link Logic
             const loc = window.location.href;
             const directory = loc.substring(0, loc.lastIndexOf('/'));
             const downloadUrl = `${directory}/download.html?fileId=${uuid}&name=${encodeURIComponent(name)}`;
@@ -204,7 +201,7 @@
             list.unshift(newFile);
             localStorage.setItem('user_files', JSON.stringify(list));
             loadFiles();
-            alert("Success! Check My Files.");
+            alert("Success! Link Generated.");
         }
 
         function loadFiles() {
@@ -213,13 +210,13 @@
             document.getElementById('file-count').innerText = list.length;
             
             if(list.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#555; padding:20px;">No files uploaded yet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#555; padding:20px;">No files yet.</td></tr>';
                 return;
             }
 
             tbody.innerHTML = list.map(f => `
                 <tr>
-                    <td><div style="width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 ${f.name}</div></td>
+                    <td><div style="width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 ${f.name}</div></td>
                     <td><button class="copy-btn" onclick="copyLink('${f.url}')">Copy Link</button></td>
                 </tr>
             `).join('');
@@ -236,4 +233,5 @@
         }
     </script>
 </body>
-</html>
+    </html>
+    
