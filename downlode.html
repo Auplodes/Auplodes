@@ -3,31 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Download | Auplodes</title>
+    <title>Auplodes - MediaFire Edition</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;800&display=swap');
-        body { background: #030712; color: white; font-family: 'Plus Jakarta Sans', sans-serif; text-align: center; }
-        .container { max-width: 500px; margin: 100px auto; background: #111827; padding: 50px; border-radius: 40px; border: 1px solid #1f2937; }
-        .icon { font-size: 80px; margin-bottom: 20px; }
-        h2 { font-weight: 800; color: #38bdf8; }
-        .dl-btn { background: #22c55e; color: white; padding: 20px 60px; border-radius: 15px; text-decoration: none; font-weight: 800; display: inline-block; margin-top: 30px; box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3); }
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        
+        body {
+            background-color: #0d0e10;
+            color: #ffffff;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .dl-container {
+            background: #1a1c1e;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            border: 1px solid #3a3f44;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+
+        /* Left Side - File Info */
+        .file-info {
+            flex: 1;
+            padding: 40px;
+            border-right: 1px solid #3a3f44;
+            min-width: 300px;
+        }
+
+        .file-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .file-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .file-details {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* Right Side - Download Button */
+        .dl-action {
+            flex: 1;
+            background: #111315;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-width: 300px;
+        }
+
+        .mf-dl-btn {
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 20px 50px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 18px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+            transition: 0.3s;
+            text-align: center;
+            width: 80%;
+        }
+
+        .mf-dl-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .sub-info {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            color: #444;
+            font-size: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .file-info { border-right: none; border-bottom: 1px solid #3a3f44; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="icon">💎</div>
-        <h2 id="fname">File Found</h2>
-        <p>This file is shared via Auplodes.in Premium Cloud.</p>
-        <a href="#" id="link" class="dl-btn">DOWNLOAD NOW</a>
+
+    <div class="dl-container">
+        <div class="file-info">
+            <div class="file-icon">📁</div>
+            <div class="file-name" id="display-name">Loading...</div>
+            <div class="file-details">
+                <p>Type: Archive / File</p>
+                <p>Security: Verified by Auplodes</p>
+            </div>
+            <p style="color:#007bff; font-size:12px; font-weight:bold;">Powered by ANKIT X MODZ</p>
+        </div>
+
+        <div class="dl-action">
+            <a href="#" id="dl-trigger" class="mf-dl-btn">Download Now</a>
+            <div class="sub-info">File is ready. Your download will start instantly.</div>
+        </div>
     </div>
+
+    <footer>© 2026 Auplodes.in | Secure Cloud Storage</footer>
+
     <script>
-        const p = new URLSearchParams(window.location.search);
-        const id = p.get('file');
-        const name = p.get('name');
-        if(id) {
-            document.getElementById('fname').innerText = name;
-            document.getElementById('link').href = `https://ucarecdn.com/${id}/-/inline/no/${name}`;
+        // MediaFire Style URL Parsing
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileId = urlParams.get('fileId');
+        const fileName = urlParams.get('name');
+
+        if(fileId) {
+            document.getElementById('display-name').innerText = decodeURIComponent(fileName);
+            // Uploadcare Direct CDN Link
+            const directLink = `https://ucarecdn.com/${fileId}/-/inline/no/${fileName}`;
+            document.getElementById('dl-trigger').href = directLink;
+            document.getElementById('dl-trigger').setAttribute('download', fileName);
+        } else {
+            document.querySelector('.dl-container').innerHTML = "<div style='padding:50px;'>Invalid or Expired Link</div>";
         }
     </script>
 </body>
-</html>
+                                                                                                   </html>
+                                                                                                   
