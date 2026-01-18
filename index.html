@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auplodes | Secure Media Storage</title>
+    <title>Auplodes | Cloud Storage</title>
     <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
@@ -26,8 +26,8 @@
         table { width: 100%; border-collapse: collapse; }
         th { background: #2a2e33; padding: 12px; text-align: left; color: #888; font-size: 12px; }
         td { padding: 12px; border-bottom: 1px solid var(--mf-border); font-size: 14px; }
-        .copy-btn { background: var(--mf-blue); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-right: 5px; font-weight: bold;}
-        .del-btn { background: #ff4d4d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;}
+        .copy-btn { background: var(--mf-blue); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .del-btn { background: #ff4d4d; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; margin-left: 5px; }
         .auth-card { background: var(--mf-card); padding: 30px; border-radius: 12px; max-width: 350px; margin: 50px auto; }
         input { width: 100%; padding: 12px; margin-bottom: 15px; background: #0d0e10; border: 1px solid var(--mf-border); color: white; border-radius: 6px; box-sizing: border-box; }
         .btn-main { width: 100%; padding: 12px; background: var(--mf-blue); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
@@ -36,6 +36,7 @@
 <body>
     <div class="rainbow-banner"><a href="https://t.me/+PvAMD5GrdcBkNDE1" target="_blank" style="color:inherit; text-decoration:none;">JOIN ANKIT X MODZ TELEGRAM</a></div>
     <header><div class="logo">Au<span>plodes</span></div><div id="user-info"></div></header>
+
     <div class="container">
         <div id="auth-section" class="auth-card">
             <h2 style="text-align:center;">User Login</h2>
@@ -43,11 +44,13 @@
             <input type="password" id="pass" placeholder="Password">
             <button class="btn-main" onclick="login()">Login & Upload</button>
         </div>
+
         <div id="dashboard">
             <div class="stats-grid">
                 <div class="stat-card"><small style="color:#888">Storage</small><div style="font-weight:bold">Unlimited</div></div>
                 <div class="stat-card"><small style="color:#888">Files</small><div id="file-count" style="font-weight:bold">0</div></div>
             </div>
+
             <div class="upload-section">
                 <h3>Select File</h3>
                 <input type="hidden" role="uploadcare-uploader" data-public-key="d2dac43b0699b5b058d8" id="uploader-input" />
@@ -56,8 +59,10 @@
                     <div class="pg-container"><div class="pg-bar" id="pg-bar-fill"></div></div>
                 </div>
             </div>
-            <h3 style="margin: 15px 0 10px 0;">📁 My Files</h3>
-            <input type="text" class="search-box" id="fileSearch" placeholder="Search your files..." onkeyup="filterFiles()">
+
+            <h3 style="margin: 15px 0 10px 0;">📁 My Uploads</h3>
+            <input type="text" class="search-box" id="fileSearch" placeholder="Search files..." onkeyup="filterFiles()">
+            
             <div class="file-list">
                 <table>
                     <thead><tr><th>File Name</th><th>Action</th></tr></thead>
@@ -66,10 +71,27 @@
             </div>
         </div>
     </div>
+
     <script>
-        window.onload = () => { const user = localStorage.getItem('logged_user'); if(user) { showDash(user); loadFiles(); } }
-        function login() { const u = document.getElementById('uname').value; if(!u) return alert("Username bhariye!"); localStorage.setItem('logged_user', u); showDash(u); loadFiles(); }
-        function showDash(user) { document.getElementById('auth-section').style.display = 'none'; document.getElementById('dashboard').style.display = 'block'; document.getElementById('user-info').innerHTML = `<span style="font-size:13px">${user}</span> | <span style="color:#ff4d4d; cursor:pointer;" onclick="logout()">Logout</span>`; }
+        window.onload = () => {
+            const user = localStorage.getItem('logged_user');
+            if(user) { showDash(user); loadFiles(); }
+        }
+
+        function login() {
+            const u = document.getElementById('uname').value;
+            if(!u) return alert("Username bhariye!");
+            localStorage.setItem('logged_user', u);
+            showDash(u);
+            loadFiles();
+        }
+
+        function showDash(user) {
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('user-info').innerHTML = `<span style="font-size:13px">${user}</span> | <span style="color:#ff4d4d; cursor:pointer;" onclick="logout()">Logout</span>`;
+        }
+
         function logout() { localStorage.removeItem('logged_user'); location.reload(); }
 
         const widget = uploadcare.Widget('#uploader-input');
@@ -93,23 +115,21 @@
             let list = JSON.parse(localStorage.getItem('user_files') || '[]');
             const loc = window.location.href;
             const directory = loc.substring(0, loc.lastIndexOf('/'));
+            // Premium looking download page link
             const downloadUrl = `${directory}/download.html?fileId=${uuid}&name=${encodeURIComponent(name)}`;
-            
-            // Fixed: Unique ID with Timestamp
-            list.unshift({ name: name, url: downloadUrl, id: Date.now().toString() });
+
+            list.unshift({ id: 'f_' + Date.now(), name: name, url: downloadUrl });
             localStorage.setItem('user_files', JSON.stringify(list));
             loadFiles();
-            alert("File Uploaded Successfully!");
         }
 
         function loadFiles() {
             const list = JSON.parse(localStorage.getItem('user_files') || '[]');
             const tbody = document.getElementById('file-table-body');
             document.getElementById('file-count').innerText = list.length;
-            
             tbody.innerHTML = list.map(f => `
-                <tr id="row-${f.id}">
-                    <td><div style="width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 ${f.name}</div></td>
+                <tr id="${f.id}">
+                    <td><div style="width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 ${f.name}</div></td>
                     <td>
                         <button class="copy-btn" onclick="copyLink('${f.url}')">Copy</button>
                         <button class="del-btn" onclick="deleteFile('${f.id}')">Delete</button>
@@ -118,12 +138,11 @@
             `).join('');
         }
 
-        function deleteFile(targetId) {
-            if(!confirm("Kya aap ise delete karna chahte hain?")) return;
+        function deleteFile(uniqueId) {
+            if(!confirm("Sirf yahi file delete hogi. Karein?")) return;
             let list = JSON.parse(localStorage.getItem('user_files') || '[]');
-            // Fixed: Strict comparison for specific file deletion
-            list = list.filter(f => f.id !== targetId);
-            localStorage.setItem('user_files', JSON.stringify(list));
+            const newList = list.filter(item => item.id !== uniqueId);
+            localStorage.setItem('user_files', JSON.stringify(newList));
             loadFiles();
         }
 
@@ -135,8 +154,9 @@
 
         function copyLink(url) {
             const el = document.createElement('textarea'); el.value = url; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
-            alert("Link Copied!");
+            alert("Download Page Link Copied!");
         }
     </script>
 </body>
-</html>
+                                           </html>
+                 
