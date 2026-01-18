@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auplodes | Secure Cloud Storage</title>
+    <title>Auplodes | Secure Storage</title>
     <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         :root { --blue: #007bff; --dark: #0d0e10; --card: #1a1c1e; --border: #33383e; --text: #ffffff; }
         body { background-color: var(--dark); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
 
-        /* Branding Banner */
         .rainbow-banner { width: 100%; padding: 10px 0; text-align: center; font-weight: bold; background: #000; border-bottom: 2px solid; animation: rainbow 3s linear infinite; font-size: 13px; }
         @keyframes rainbow { 0% { border-color: red; } 33% { border-color: lime; } 66% { border-color: #0080ff; } 100% { border-color: red; } }
         
         header { background: #16181a; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
         .logo { font-size: 22px; font-weight: 700; color: var(--blue); }
-        .logo span { color: white; }
 
         .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
         #dashboard { display: none; }
@@ -26,17 +24,14 @@
         .pg-bg { width: 100%; background: #333; height: 8px; border-radius: 4px; margin: 10px 0; overflow: hidden; }
         .pg-fill { width: 0%; height: 100%; background: var(--blue); transition: width 0.3s; }
         
-        .search-input { width: 100%; padding: 12px; background: #121416; border: 1px solid var(--border); border-radius: 8px; color: white; margin-bottom: 15px; box-sizing: border-box; }
-
         .file-list { background: var(--card); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
-        th { background: #25282c; padding: 12px; text-align: left; font-size: 12px; color: #888; }
         td { padding: 14px 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
         
-        .btn-copy { background: var(--blue); color: white; border: none; padding: 7px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 11px; }
-        .btn-del { background: #ff4d4d; color: white; border: none; padding: 7px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 11px; margin-left: 5px; }
+        .btn-copy { background: var(--blue); color: white; border: none; padding: 7px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .btn-del { background: #ff4d4d; color: white; border: none; padding: 7px 12px; border-radius: 5px; cursor: pointer; margin-left: 5px; }
 
-        /* PROMO SCREEN (DOWNLOAD PAGE) */
+        /* PROMO SCREEN */
         #promo-screen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #000; display: none; z-index: 10000; 
@@ -46,8 +41,8 @@
         .loader { width: 40px; height: 40px; border: 4px solid #222; border-top: 4px solid var(--blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .login-box { background: var(--card); padding: 30px; border-radius: 15px; max-width: 350px; margin: 50px auto; border: 1px solid var(--border); }
-        input[type="text"], input[type="password"] { width: 100%; padding: 12px; margin-bottom: 15px; background: #08090a; border: 1px solid var(--border); color: white; border-radius: 8px; box-sizing: border-box; }
+        .login-box { background: var(--card); padding: 30px; border-radius: 15px; max-width: 350px; margin: 50px auto; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #08090a; border: 1px solid var(--border); color: white; border-radius: 8px; box-sizing: border-box; }
         .btn-login { width: 100%; padding: 12px; background: var(--blue); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
@@ -57,7 +52,7 @@
         <div class="promo-box">
             <h3 style="color:var(--blue); margin:0;">PROMOTED BY</h3>
             <h1 style="margin:10px 0; letter-spacing:3px;">AUPLODES.IN</h1>
-            <p id="promo-msg" style="color:#666; font-size:13px;">Preparing your secure download...</p>
+            <p id="promo-msg" style="color:#666;">Generating download link...</p>
             <div class="loader"></div>
             <div id="countdown" style="font-size:25px; font-weight:bold;">5</div>
         </div>
@@ -65,49 +60,37 @@
 
     <div class="rainbow-banner"><a href="https://t.me/+PvAMD5GrdcBkNDE1" target="_blank" style="color:inherit; text-decoration:none;">JOIN ANKIT X MODZ TELEGRAM</a></div>
     
-    <header>
-        <div class="logo">Au<span>plodes</span></div>
-        <div id="user-nav"></div>
-    </header>
+    <header><div class="logo">Au<span>plodes</span></div><div id="user-nav"></div></header>
 
     <div class="container">
         <div id="login-section" class="login-box">
-            <h2 style="text-align:center; margin-top:0;">Owner Login</h2>
+            <h2 style="text-align:center;">Login</h2>
             <input type="text" id="user" placeholder="Username">
             <input type="password" id="pass" placeholder="Password">
-            <button class="btn-login" onclick="doLogin()">Login Dashboard</button>
+            <button class="btn-login" onclick="doLogin()">Open Dashboard</button>
         </div>
 
         <div id="dashboard">
             <div class="upload-card">
-                <h3 style="margin-top:0;">Upload to Cloud</h3>
                 <input type="hidden" role="uploadcare-uploader" data-public-key="d2dac43b0699b5b058d8" id="uploader" />
                 <div id="status-box">
-                    <div style="display:flex; justify-content:space-between; font-size:12px;"><span id="fn">File...</span><span id="pt" style="color:var(--blue);">0%</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span id="fn">File...</span><span id="pt">0%</span></div>
                     <div class="pg-bg"><div class="pg-fill" id="pb"></div></div>
                 </div>
             </div>
-
-            <h3 style="margin: 20px 0 10px 0;">📁 My Uploaded Files</h3>
-            <input type="text" class="search-input" id="search" placeholder="Search files..." onkeyup="doSearch()">
-            
             <div class="file-list">
-                <table>
-                    <thead><tr><th>File Name</th><th>Action</th></tr></thead>
-                    <tbody id="list-body"></tbody>
-                </table>
+                <table><tbody id="list-body"></tbody></table>
             </div>
         </div>
     </div>
 
     <script>
-        // --- DOWNLOAD & PROMO LOGIC ---
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
-            const fileId = params.get('f'); 
-            const fileName = params.get('n');
+            const fId = params.get('f'); 
+            const fName = params.get('n');
 
-            if (fileId && fileName) {
+            if (fId && fName) {
                 document.getElementById('promo-screen').style.display = 'flex';
                 let time = 5;
                 const timer = setInterval(() => {
@@ -115,112 +98,61 @@
                     document.getElementById('countdown').innerText = time;
                     if (time <= 0) {
                         clearInterval(timer);
-                        triggerSecureDownload(fileId, decodeURIComponent(fileName));
+                        // FIXED: Official Download API Format
+                        const downloadUrl = `https://ucarecdn.com/${fId}/-/inline/no/${fName}`;
+                        const a = document.createElement('a');
+                        a.href = downloadUrl;
+                        a.setAttribute('download', fName);
+                        a.click();
+                        document.getElementById('promo-msg').innerText = "Download Started!";
                     }
                 }, 1000);
             } else {
-                const logged = localStorage.getItem('au_user');
-                if(logged) { openDash(logged); renderFiles(); }
+                if(localStorage.getItem('au_user')) { openDash(); renderFiles(); }
             }
         }
 
-        async function triggerSecureDownload(id, name) {
-            document.getElementById('promo-msg').innerText = "Downloading started...";
-            const url = `https://ucarecdn.com/${id}/${name}`;
-            
-            try {
-                const resp = await fetch(url);
-                const blob = await resp.blob();
-                const blobUrl = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = blobUrl;
-                a.download = name;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(blobUrl);
-                document.getElementById('promo-msg').innerText = "Done! You can close this tab.";
-            } catch (e) {
-                // Fallback for large files
-                window.location.href = url;
-            }
-        }
-
-        // --- DASHBOARD LOGIC ---
         function doLogin() {
-            const u = document.getElementById('user').value;
-            if(!u) return alert("Username bhariye!");
-            localStorage.setItem('au_user', u);
-            openDash(u);
-            renderFiles();
+            localStorage.setItem('au_user', document.getElementById('user').value);
+            openDash(); renderFiles();
         }
 
-        function openDash(u) {
+        function openDash() {
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
-            document.getElementById('user-nav').innerHTML = `<span style="font-size:13px;">${u}</span> | <a href="#" onclick="logout()" style="color:red; text-decoration:none; font-size:12px;">Logout</a>`;
         }
-
-        function logout() { localStorage.removeItem('au_user'); location.reload(); }
 
         const widget = uploadcare.Widget('#uploader');
-        widget.onChange(function(file) {
-            if (file) {
-                document.getElementById('status-box').style.display = 'block';
-                file.progress(i => {
-                    let p = Math.round(i.progress * 100);
-                    document.getElementById('pb').style.width = p + '%';
-                    document.getElementById('pt').innerText = p + '%';
-                    document.getElementById('fn').innerText = i.name;
-                });
-                file.done(i => {
-                    document.getElementById('status-box').style.display = 'none';
-                    saveToLocal(i.name, i.uuid);
-                });
-            }
-        });
-
-        function saveToLocal(n, id) {
+        widget.onUploadComplete(i => {
             let files = JSON.parse(localStorage.getItem('au_files') || '[]');
-            const currentPath = window.location.origin + window.location.pathname;
-            const finalLink = `${currentPath}?f=${id}&n=${encodeURIComponent(n)}`;
-            
-            // Unique ID using timestamp for specific delete
-            files.unshift({ uid: 'file_' + Date.now(), name: n, link: finalLink });
+            const link = `${window.location.origin}${window.location.pathname}?f=${i.uuid}&n=${encodeURIComponent(i.name)}`;
+            files.unshift({ uid: Date.now(), name: i.name, link: link });
             localStorage.setItem('au_files', JSON.stringify(files));
             renderFiles();
-        }
+        });
 
         function renderFiles() {
             const files = JSON.parse(localStorage.getItem('au_files') || '[]');
-            const body = document.getElementById('list-body');
-            body.innerHTML = files.map(f => `
-                <tr id="${f.uid}">
-                    <td><div style="max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 ${f.name}</div></td>
-                    <td>
-                        <button class="btn-copy" onclick="copy('${f.link}')">Copy</button>
-                        <button class="btn-del" onclick="del('${f.uid}')">Delete</button>
-                    </td>
+            document.getElementById('list-body').innerHTML = files.map(f => `
+                <tr>
+                    <td>${f.name}</td>
+                    <td><button class="btn-copy" onclick="copy('${f.link}')">Copy</button>
+                    <button class="btn-del" onclick="del(${f.uid})">Del</button></td>
                 </tr>
             `).join('');
         }
 
         function del(id) {
-            if(!confirm("Kya aap ise delete karna chahte hain?")) return;
-            let files = JSON.parse(localStorage.getItem('au_files') || '[]');
-            const filtered = files.filter(item => item.uid !== id);
-            localStorage.setItem('au_files', JSON.stringify(filtered));
+            let files = JSON.parse(localStorage.getItem('au_files') || '[]').filter(x => x.uid !== id);
+            localStorage.setItem('au_files', JSON.stringify(files));
             renderFiles();
         }
 
-        function doSearch() {
-            let q = document.getElementById('search').value.toLowerCase();
-            let rows = document.querySelectorAll('#list-body tr');
-            rows.forEach(r => r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none');
-        }
-
         function copy(url) {
-            navigator.clipboard.writeText(url).then(() => alert("Auplodes Link Copied!"));
+            navigator.clipboard.writeText(url);
+            alert("Copied!");
         }
     </script>
 </body>
-</html>
+    </html>
+                                                                                                              
